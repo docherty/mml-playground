@@ -1,28 +1,59 @@
 <m-model
   id="hiro01"
-  src="https://jmd.is/gltf/hiro01.glb"
+  src="https://jmd.is/gltf/hiro01.gltf"
   rx="180"
   rz="180"
-  sx="2"
-  sy="2"
-  sz="2"
-  y="0"
+  sx="1"
+  sy="1"
+  sz="1"
+  y="3"
   ry="-45.00000000000001"
   z="0"
   x="0"
+  onclick="toggleDirection()"
+></m-model>
+<m-model
+  id="hiro02"
+  src="https://jmd.is/gltf/hiro01.gltf"
+  rx="180"
+  rz="180"
+  sx="1"
+  sy="1"
+  sz="1"
+  y="2"
+  ry="-45.00000000000001"
+  z="0"
+  x="0"
+  onclick="toggleDirection()"
 ></m-model>
 
 <script>
   //{PLAYGROUND_RUNTIME_CONSTANTS}
 
   let r = 0;
-
+  let dir = 'fwd';
+  let rotator = document.getElementById("hiro01");
+  let rotator2 = document.getElementById("hiro02");
+  
   function rotateHiro() {
-    r += 45;
-    document.getElementById("hiro01").setAttribute("ry", r);
+      if (dir === 'fwd'){
+            r -= 10;   
+      } else {
+          r += 10;
+      }
+    rotator.setAttribute("ry", r);
+    rotator2.setAttribute("ry", r*-1);
+  }
+  
+  function toggleDirection() {
+     if (dir === 'fwd'){
+            dir = 'rev';
+      } else {
+          dir = 'fwd';
+      }
   }
 
   setInterval(() => {
     rotateHiro();
-  }, 500);
+  }, 80);
 </script>
