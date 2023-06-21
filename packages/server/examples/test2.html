@@ -1,0 +1,114 @@
+<m-group id="balloon" y=0.5 ry=0>
+  <m-model
+  id="hiro01"
+  src="https://jmd.is/gltf/balloon01.gltf?hello"
+  sx="1"
+  sy="1"
+  sz="1"
+  y="0"
+  z="0"
+  x="0"
+></m-model>
+
+<m-cube
+  id="platform"
+  sx=2
+  sy=.1
+  sz=2
+  color="brown"
+  collideable=true
+  visible=false
+></m-cube>
+<m-cube
+  id="btnUp"
+  z=2
+  color="green"
+  collideable="true"
+  onclick="doSomething('up')"
+></m-cube>
+<m-cube
+  id="btnDown"
+  z=-2
+  color="red"
+  collideable="true"
+   onclick="doSomething('down')"
+></m-cube>
+</m-group>
+<m-cube
+  id="btnReset"
+  x=2
+  sx=.5
+  sz=.5
+  sy=.5
+  color="yellow"
+  collideable="true"
+   onclick="doSomething('reset')"
+></m-cube>
+<script>
+
+function doSomething(str) {
+     console.log(str);
+
+        if (str === "up") {
+            // Add upward force to the balloon
+            yForce += .2;
+        } else if (str === "down") {
+            // Reduce the upward force to slow down ascent
+            yForce -= .2;
+        } else if (str === "reset") {
+            // Reset the balloon position and forces
+            balloon.y = 0;
+            yForce = 0;
+        }
+        console.log(yForce)
+}
+
+function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+}
+
+// Render the scene
+function animateBalloon() { 
+    // Apply forces to the balloon
+    let oy = parseFloat(balloon.getAttribute("y"));
+    if (oy > .7){
+      yForce = clamp(yForce, -1, maxUpwardForce);
+    } else {
+      yForce = clamp(yForce, 0, maxUpwardForce);
+    }   
+    let ny = oy + parseFloat(yForce) + gravity;
+    ny = clamp(ny, 0.1, 1000);
+   /* if(ny !== oy){
+      console.log("animateBalloon yForce:" + yForce + " oy: " + oy + " ny:" + ny);
+    }*/
+    balloon.setAttribute("y", ny);
+    // platform.y += upwardForce;
+    yForce += gravity;
+    rot = parseFloat(balloon.getAttribute("ry")) + .5;
+    balloon.setAttribute("ry", rot);
+}
+
+setInterval(() => {
+    animateBalloon();
+  }, 50);
+
+function init(){
+  console.log("loaded")
+  balloon = document.getElementById("balloon");
+  // platform.position.y = 5;
+ // Variables for controlling balloon movement
+  yForce = 0;
+  maxUpwardForce = 100;
+  gravity = -0.005;
+
+  // Create the clickable object to add upward force
+  upObject = document.getElementById("btnUp");
+
+  // Create the clickable object to slow down ascent
+  downObject = document.getElementById("btnDown");
+
+  // Create the clickable object to reset the platform position
+  resetObject = document.getElementById("btnReset");
+}
+init();
+</script>

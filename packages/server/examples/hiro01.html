@@ -1,0 +1,71 @@
+<m-model
+  id="hiro01"
+  src="https://jmd.is/gltf/hiro01.gltf"
+  rx="180"
+  rz="180"
+  sx="1"
+  sy="1"
+  sz="1"
+  y="3"
+  ry="-45.00000000000001"
+  z="0"
+  x="0"
+  onclick="toggleDirection()"
+></m-model>
+<m-cube
+    id="object1"
+    y=1
+    color="blue"
+></m-cube>
+
+<script>
+  //{PLAYGROUND_RUNTIME_CONSTANTS}
+
+  let r = 0;
+  let dir = 'fwd';
+  let rotator = document.getElementById("hiro01");
+  let object1 = document.getElementById("object1");
+  let rx = 0;
+  let ry = 0;
+  let rz = 0;
+  let sx = 1;
+  let sy = 1;
+  let sz = 1;
+  
+  function rotateHiro() {
+      if (dir === 'fwd'){
+            r -= 10;   
+      } else {
+          r += 10;
+      }
+    rotator.setAttribute("ry", r);
+  }
+  
+  function animateArt(){
+    rx += 1;
+    ry += 1;
+    rz += 1;
+    object1.setAttribute("rx", rx);
+    object1.setAttribute("ry", ry);
+    object1.setAttribute("rz", rz);
+    sx = Math.abs(Math.sin(Date.now() * 0.001));
+    sy = Math.abs(Math.sin(Date.now() * 0.001));
+    sz = Math.abs(Math.sin(Date.now() * 0.001));
+    object1.setAttribute("sx", sx);
+    object1.setAttribute("sy", sy);
+    object1.setAttribute("sz", sz);
+  }
+  
+  function toggleDirection() {
+     if (dir === 'fwd'){
+            dir = 'rev';
+      } else {
+          dir = 'fwd';
+      }
+  }
+
+  setInterval(() => {
+    rotateHiro();
+    animateArt();
+  }, 80);
+</script>

@@ -1,0 +1,238 @@
+<m-group id="carpet" x="0" y="0.3" z="0" ry="0">
+  <m-model
+  id="rug"
+  src="https://jmd.is/gltf/carpet01.gltf"
+  sx="0.6"
+  sy="1"
+  sz="0.6"
+  y="-0.3"
+  z="0"
+  x="0"
+  ry="-90"
+  collideable="false"
+></m-model>
+<m-cube
+  id="btnUp"
+  z="2"
+  y="0"
+  x="0.7"
+  sx="0.75"
+  sy="0.1"
+  sz="0.75"
+  rx="-15"
+  color="green"
+  collideable="true"
+  onclick="doSomething('up')"
+></m-cube>
+<m-cube
+  id="rug"
+  x="0"
+  y="-0.3"
+  z="0"
+  sx="2"
+  sy="0.02"
+  sz="3"
+  collideable="true"
+  visible="false"
+></m-cube>
+<m-cube
+  id="btnDown"
+  z="2"
+  x="-0.7"
+  sx="0.75"
+  sy="0.1"
+  sz="0.75"
+  rx="-15"
+  color="red"
+  collideable="true"
+  onclick="doSomething('down')"
+></m-cube>
+<m-cube
+  id="btnRight"
+  x="-0.9"
+  y="-0.29"
+  z="0"
+  visible="false"
+  sx="0.5"
+  sz="2.7"
+  sy="0.01"
+  collideable="true"
+  onclick="doSomething('right')"
+></m-cube>
+<m-cube
+  id="btnLeft"
+  x="0.9"
+  y="-0.29"
+  z="0"
+  visible="true"
+  sx="0.5"
+  sz="2.7"
+  sy="0.01"
+  collideable="true"
+  onclick="doSomething('left')"
+></m-cube>
+<m-cube
+  id="btnFwd"
+  x="0"
+  y="-0.29"
+  z="1.2"
+  sx="1.4"
+  sz="0.5"
+  sy="0.01"
+  collideable="true"
+  onclick="doSomething('fwd')"
+></m-cube>
+<m-cube
+  id="btnBack"
+  x="0"
+  y="-0.29"
+  z="-1.2"
+  sx="1.4"
+  sz="0.5"
+  sy="0.01"
+  collideable="true"
+  onclick="doSomething('back')"
+></m-cube>
+</m-group>
+<m-group id="signage">
+  <m-label
+    content="Cast your spell and go for a ride"
+    font-size="10"
+    alignment="center"
+    x="0"
+    y="0.21"
+    z="0.3"
+    width="1"
+    height="0.2"
+    rx="-90"
+    ry="0"
+    rz="180"
+  ></m-label>
+    <m-label
+    content="...or you could press the green button!"
+    font-size="7"
+    alignment="center"
+    x="0"
+    y="0.21"
+    z="0"
+    width="1"
+    height="0.2"
+    rx="-90"
+    ry="0"
+    rz="180"
+  ></m-label>
+</m-group>
+<script>
+
+function doSomething(str) {
+  console.log(str);
+
+  if (str === "up") {
+      // Add upward force to the carpet
+      yForce += .1;
+  } else if (str === "down") {
+      // Reduce the upward force to slow down ascent
+      yForce -= .2;
+  } if (str === "left") {
+      xForce += .2;
+      xDir = "pos";
+  } if (str === "right") {
+      xForce += .2;
+      xDir = "neg";
+  } if (str === "fwd") {
+      zForce += .2;
+      zDir = "pos";
+  } if (str === "back") {
+      zForce += .2;
+      zDir = "neg";
+  } else if (str === "reset") {
+      // Reset the carpet position and forces
+      carpet.y = 0;
+      yForce = 0;
+      xForce = 0;
+      zForce = 0;
+  }
+  console.log("yForce:" + yForce + " xForce:" + xForce + " zForce:" + zForce);
+}
+
+function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+}
+
+// Render the scene
+function animateCarpet() { 
+    // Up-down motion
+    let oy = parseFloat(carpet.getAttribute("y"));
+    if (oy > .7){
+      yForce = clamp(yForce, -1, maxUpwardForce);
+    } else {
+      yForce = clamp(yForce, 0, maxUpwardForce);
+    }   
+    let ny = oy + parseFloat(yForce) + gravity;
+    ny = clamp(ny, 0.3, 1000);
+    carpet.setAttribute("y", ny);
+    yForce += gravity;
+    
+    // side to side motion   
+    let ox = parseFloat(carpet.getAttribute("x"));
+    let nx;
+    if (xDir === "pos"){
+      nx = ox + xForce;
+    } else {
+      nx = ox - xForce;
+    }
+    // nx = clamp(nx, 0, 1000);
+    carpet.setAttribute("x", nx);
+    if (xForce > 0){
+      xForce += friction;
+    }
+    
+    // fwd-back motion   
+    let oz = parseFloat(carpet.getAttribute("z"));
+    let nz;
+    if (zDir === "pos"){
+      nz = oz + zForce;
+    } else {
+      nz = oz - zForce;
+    }
+    // nx = clamp(nx, 0, 1000);
+    carpet.setAttribute("z", nz);
+    if (zForce > 0){
+      zForce += friction;
+    }
+    
+}
+
+setInterval(() => {
+    animateCarpet();
+  }, 16.66667);
+
+function init(){
+  console.log("--- loaded ---")
+  carpet = document.getElementById("carpet");
+ // Variables for controlling carpet movement
+  yForce = 0;
+  maxUpwardForce = 100;
+  gravity = -0.0005;
+  // horizontal motion
+  xForce = 0;
+  // maxXForce = 100;
+  friction = -0.003;
+  xDir = "pos";
+  
+  zForce = 0;
+  zDir = "pos";
+
+  // Create the clickable object to add upward force
+  upObject = document.getElementById("btnUp");
+  downObject = document.getElementById("btnDown");
+  
+  leftObject = document.getElementById("btnLeft");
+  rightObject = document.getElementById("btnRight");
+  fwdObject = document.getElementById("btnFwd");
+  backObject = document.getElementById("btnBack");
+    // Create the clickable object to reset the platform position
+  resetObject = document.getElementById("btnReset");
+}
+init();
+</script>
