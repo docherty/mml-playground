@@ -1,4 +1,15 @@
-<m-group id="balloon" y=0.5>
+<m-group id="balloon" y=0.5 ry=0>
+  <m-model
+  id="hiro01"
+  src="https://jmd.is/gltf/balloon01.gltf?hello"
+  sx="1"
+  sy="1"
+  sz="1"
+  y="0"
+  z="0"
+  x="0"
+></m-model>
+
 <m-cube
   id="platform"
   sx=2
@@ -6,6 +17,7 @@
   sz=2
   color="brown"
   collideable=true
+  visible=false
 ></m-cube>
 <m-cube
   id="btnUp"
@@ -72,6 +84,8 @@ function animateBalloon() {
     balloon.setAttribute("y", ny);
     // platform.y += upwardForce;
     yForce += gravity;
+    rot = parseFloat(balloon.getAttribute("ry")) + .5;
+    balloon.setAttribute("ry", rot);
 }
 
 setInterval(() => {
