@@ -9,6 +9,7 @@
   z="0"
   x="0"
   ry="-90"
+  collideable="false"
 ></m-model>
 <m-cube
   id="btnUp"
@@ -49,7 +50,7 @@
 <m-cube
   id="btnRight"
   x="-0.9"
-  y="-0.3"
+  y="-0.29"
   z="0"
   visible="false"
   sx="0.5"
@@ -61,9 +62,9 @@
 <m-cube
   id="btnLeft"
   x="0.9"
-  y="-0.3"
+  y="-0.29"
   z="0"
-  visible="false"
+  visible="true"
   sx="0.5"
   sz="2.7"
   sy="0.01"
@@ -73,27 +74,53 @@
 <m-cube
   id="btnFwd"
   x="0"
-  y="-0.3"
+  y="-0.29"
   z="1.2"
   sx="1.4"
   sz="0.5"
   sy="0.01"
   collideable="true"
   onclick="doSomething('fwd')"
-  visible="false"
 ></m-cube>
 <m-cube
   id="btnBack"
   x="0"
-  y="-0.3"
+  y="-0.29"
   z="-1.2"
   sx="1.4"
   sz="0.5"
   sy="0.01"
   collideable="true"
   onclick="doSomething('back')"
-  visible="false"
 ></m-cube>
+</m-group>
+<m-group id="signage">
+  <m-label
+    content="Cast your spell and go for a ride"
+    font-size="10"
+    alignment="center"
+    x="0"
+    y="0.21"
+    z="0.3"
+    width="1"
+    height="0.2"
+    rx="-90"
+    ry="0"
+    rz="180"
+  ></m-label>
+    <m-label
+    content="...or you could press the green button!"
+    font-size="7"
+    alignment="center"
+    x="0"
+    y="0.21"
+    z="0"
+    width="1"
+    height="0.2"
+    rx="-90"
+    ry="0"
+    rz="180"
+  ></m-label>
 </m-group>
 <script>
 
@@ -190,7 +217,7 @@ function init(){
   // horizontal motion
   xForce = 0;
   // maxXForce = 100;
-  friction = -0.001;
+  friction = -0.003;
   xDir = "pos";
   
   zForce = 0;
