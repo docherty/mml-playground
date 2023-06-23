@@ -1,0 +1,118 @@
+<m-group id="cannon" y="0">
+  <m-cube id="missile"
+          sx="0.1"
+          sy="0.1"
+          sz="0.2"
+          y="0.4"
+          x="0"
+          z="0"
+          ry="90"
+          rz="0"
+          color="green">
+  </m-cube>
+  <m-cube id="launch"
+          sx="0.5"
+          sy="0.05"
+          sz="0.5"
+          y="0"
+          x="0.5"
+          z="0"
+          color="red"
+          onclick="launchIt()">
+  </m-cube>
+</m-group>
+<script>
+  // Custom Vector3 class
+  function Vector3(x, y, z) {
+    this.x = x || 0;
+    this.y = y || 0;
+    this.z = z || 0;
+  }
+
+  Vector3.prototype.clone = function () {
+    return new Vector3(this.x, this.y, this.z);
+  };
+
+ Vector3.prototype.set = function (vector) {
+    this.x = vector.x;
+    this.y = vector.y;
+    this.z = vector.z;
+    return this;
+  };
+  
+  Vector3.prototype.add = function (vector) {
+    this.x += vector.x;
+    this.y += vector.y;
+    this.z += vector.z;
+    return this;
+  };
+
+  Vector3.prototype.multiplyScalar = function (scalar) {
+    this.x *= scalar;
+    this.y *= scalar;
+    this.z *= scalar;
+    return this;
+  };
+
+  // Function to handle button click event
+  function launchIt() {
+    console.log("Fire! " + isFiring);
+    if (!isFiring) {
+      isFiring = true;
+      // todo: reset the position of the 
+      initialVelocity = new Vector3(); // Create a new Vector3 instance
+      initialVelocity.x = 0;
+      initialVelocity.y = 50;
+      initialVelocity.z = -100;
+      prevTime = Date.now() * 0.001; // Initialize previous time
+      // animate();
+      setInterval(() => {
+    animateMissile();
+  }, 16.66667);
+
+    }
+  }
+
+  // Animation loop
+  function animateMissile() {
+    if (isFiring) {
+
+      // Calculate the missile's new position based on gravity and velocity
+      var time = Date.now() * 0.001; // Convert to seconds
+      var deltaTime = time - prevTime; // Calculate time elapsed since the last frame
+      var acceleration = gravity.clone(); // Acceleration is equal to gravity
+      console.log("hello: " + deltaTime);
+      var velocity = initialVelocity.clone().add(acceleration.multiplyScalar(deltaTime));
+      missile.x = parseFloat(missile.getAttribute("x"));
+      missile.x += velocity.x * deltaTime;
+      missile.y = parseFloat(missile.getAttribute("y"));
+      missile.y += velocity.y * deltaTime;
+      missile.z = parseFloat(missile.getAttribute("z")); //convert a tring to a float
+      console.log("old val: " + missile.z);
+      missile.setAttribute("z", velocity.z * deltaTime);
+      console.log("new val: " + missile.z);
+      // console.log(velocity.z + " / " + missile.z + " / " + deltaTime);
+      // Update previous time for the next frame
+      prevTime = time;
+      flightTime += 1;
+      if(flightTime > 10){
+        isFiring = false;
+      }
+    }
+  }
+
+  // Wait for the DOM to load before accessing the elements
+  document.addEventListener('DOMContentLoaded', function () {
+    missile = document.getElementById("missile");
+    console.log("loaded");
+      isFiring = false; // Flag to track if missile is being fired
+  initialVelocity = null; // Initial velocity (x, y, z)
+  
+  gravity = new Vector3(0, -9.8, 0); // Gravity vector
+  prevTime;
+  missile; // Global variable to hold the missile element
+  flightTime = 0;
+  
+  });
+  
+</script>
